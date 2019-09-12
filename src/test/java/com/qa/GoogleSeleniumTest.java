@@ -1,13 +1,16 @@
 package com.qa;
 
+import com.relevantcodes.extentreports.ExtentReports;
+import com.relevantcodes.extentreports.ExtentTest;
+import com.relevantcodes.extentreports.LogStatus;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.interactions.Actions;
 
+import java.io.File;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -121,7 +124,6 @@ public class GoogleSeleniumTest {
         //Group Radio buttons
         List<WebElement> radioSet1 = driver.findElements(By.name("gender"));
         List<WebElement> radioSet2 = driver.findElements(By.name("ageGroup"));
-        WebElement
 
         for(WebElement rads1 : radioSet1){
             rads1.click();
@@ -130,8 +132,96 @@ public class GoogleSeleniumTest {
 
             }
         }
+    }
+
+    @Test
+    public void MouseMovementTest() throws InterruptedException {
+        driver.get("https://www.seleniumeasy.com/test/drag-drop-range-sliders-demo.html");
+        Actions action = new Actions(driver);
+
+        List<WebElement> sliders = driver.findElements(By.name("range"));
+
+        for(WebElement slider : sliders){
+            int sliderStart = slider.getSize().getWidth() / 2;
+
+            action.moveToElement(slider).moveByOffset(-sliderStart, 0).clickAndHold().release().perform();
+            Thread.sleep(500);
+            action.clickAndHold().moveByOffset(sliderStart*2, 0).release().perform();
+            Thread.sleep(500);
+            action.clickAndHold().moveByOffset(-sliderStart,0).perform();
+            Thread.sleep(500);
+        }
+    }
 
 
+
+    @Test
+    public void dragAndDropTest() throws InterruptedException {
+        driver.get("https://www.seleniumeasy.com/test/drag-and-drop-demo.html");
+        Actions action = new Actions(driver);
+
+        List<WebElement> objects = driver.findElement(By.id("todrag")).findElements(By.tagName("span"));
+        WebElement lz = driver.findElement(By.id("mydropzone"));
+
+        for(WebElement obj : objects){
+            //action.moveToElement(obj).perform();
+//            Actions act = new Actions(driver);
+//            act.clickAndHold(obj);
+//            act.moveToElement(lz);
+//            act.release(obj);
+//            act.build().perform();
+
+            action.dragAndDrop(obj, lz).build().perform();
+
+            //action.clickAndHold(obj).moveByOffset(20,0).release().perform();
+
+        }
+
+    }
+
+    @Test
+    public void dragAndDropTest2() throws InterruptedException {
+        driver.get("http://demo.guru99.com/test/drag_drop.html");
+        Actions action = new Actions(driver);
+
+        WebElement buttonOrange = driver.findElement(By.id("fourth")).findElement(By.tagName("a"));
+        WebElement lz = driver.findElement(By.xpath("//*[@id=\"amt7\"]"));
+
+
+        action.dragAndDrop(buttonOrange, lz).build().perform();
+
+        Thread.sleep(600);
+
+
+        File scrFile = ((TakesScreenshot)driver).getScreenshotAs(OutputType.FILE);
+        System.out.println(scrFile.getAbsolutePath());
+
+        Thread.sleep(10000);
+
+//        // initialize ExtentReports with a file path
+//        ExtentReports extent = new ExtentReports("Report.txt", "Report.txt");
+//
+//        ExtentTest test;
+//
+//        // initialize / start the test
+//        test = extent.startTest("Verify application Title");
+//
+//        // add a note to the test
+//        test.log(LogStatus.INFO, "Browser started");
+//
+//        // report the test as a pass
+//        test.log(LogStatus.PASS, "verify Title of the page");
+    }
+
+    @Test
+    public void dropDownTest() throws InterruptedException {
+        driver.get("https://www.seleniumeasy.com/test/basic-select-dropdown-demo.html");
+        WebElement dropdown = driver.findElement(By.xpath("//*[@id=\"select-demo\"]"));
+
+        for(WebElement drpdwn : dropdown.findElements(By.tagName("option"))){
+            dropdown.sendKeys(Keys.DOWN);
+            Thread.sleep(300);
+        }
 
     }
 
