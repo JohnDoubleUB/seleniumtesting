@@ -225,4 +225,42 @@ public class GoogleSeleniumTest {
 
     }
 
+
+    @Test
+    public void bigForm() throws InterruptedException {
+        driver.get("https://www.seleniumeasy.com/test/input-form-demo.html");
+        Actions action = new Actions(driver);
+
+        List<WebElement> formTextFields = driver.findElement(By.id("contact_form")).findElements(By.tagName("input"));
+
+        int counter = 0;
+
+        String[] answers = {"Jeff", "Jefferson", "JeffJefforeyJefferson@gmail.com", "A Phone number", "A house", "A City", "A zip code", "Acoolwebsite.com"};
+
+
+        for(WebElement formTextField : formTextFields){
+            if(formTextField.getAttribute("type").equals("radio")){
+                formTextField.click();
+            } else {
+                formTextField.sendKeys(answers[counter]);
+                counter++;
+            }
+            Thread.sleep(200);
+        }
+
+        WebElement locationDropDown = driver.findElement(By.id("contact_form")).findElement(By.tagName("select"));
+
+        action.click(locationDropDown).sendKeys(Keys.DOWN).sendKeys(Keys.DOWN).sendKeys(Keys.DOWN).sendKeys(Keys.DOWN).perform();
+
+
+        WebElement textArea = driver.findElement(By.id("contact_form")).findElement(By.tagName("textarea"));
+
+        textArea.sendKeys("This is some text");
+        Thread.sleep(600);
+
+        WebElement submitBut = driver.findElement()
+
+
+    }
+
 }
